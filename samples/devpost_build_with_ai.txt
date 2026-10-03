@@ -1,0 +1,24 @@
+Build With AI: Basics
+Hosted by Devpost
+
+Bring an idea to life and learn the basics of building with AI. This beginner friendly
+hackathon runs in 2026 and is open to everyone, whether you write code every day or you are
+opening a terminal for the first time.
+
+Submission window
+Submissions open September 22, 2026 at 10:00 AM PT and close October 26, 2026 at 5:00pm ET.
+There is no entry fee and no purchase necessary.
+
+What you need to submit
+Every submission must include a public GitHub repository and a 1 to 3 minute demo video.
+The repository must contain scope.md, prd.md and spec.md, written during the event.
+Submit your project on the Devpost page before the deadline; late entries are not judged.
+
+Prizes
+Grand Prize: $5,000 USD
+Second place: $2,000 USD
+Third place: $1,000 USD
+
+Judging
+Judging runs November 2, 2026 through November 16, 2026. Projects are scored on design,
+innovation and presentation. Winners announced December 1, 2026.

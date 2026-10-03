@@ -1,0 +1,19 @@
+# Secrets and local state. The app reads LLM_BASE_URL / LLM_API_KEY / LLM_MODEL
+# from the environment or from .env; the key is never committed.
+.env
+
+# Local history database (created on first run)
+*.db
+*.db-journal
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Video build intermediates (the rendered mp4 and thumbnail are kept)
+docs/media/_work/
+
+# macOS
+.DS_Store

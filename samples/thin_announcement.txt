@@ -1,0 +1,7 @@
+Autumn Mini Jam
+Organised by the Studio Collective
+
+A one weekend jam for small experiments. Submissions close November 14, 2026 at 11:59pm PT.
+There is no cash prize this time; winners get a feature on the studio blog instead.
+
+Send your entry by opening an issue on the community repository before the deadline.

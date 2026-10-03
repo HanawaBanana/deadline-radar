@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#128225;</text></svg>">
+</head>
+<body{{BODY_ATTRS}}>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">&#128225;</span>
+    <div>
+      <h1>Deadline Radar</h1>
+      <p>Paste an announcement. Get a validated brief, an evidence trail and a calendar.</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="pill pill-{{MODE}}">{{MODE}} reader</span>
+    <span class="version">stdlib only &middot; no accounts</span>
+  </div>
+</header>
+
+{{TOUR}}
+
+<main class="layout">
+  <section class="col-main">
+    <section class="card composer" id="composer">
+      <h2>1. Paste the announcement, rules or competition page</h2>
+      <textarea id="source" spellcheck="false" rows="9"
+        placeholder="Paste the raw text of an announcement page here...">{{SOURCE_TEXT}}</textarea>
+      <div class="composer-actions">
+        <label class="mode-pick">Reader
+          <select id="mode">
+            <option value="offline"{{OFFLINE_SELECTED}}>offline rules (no network)</option>
+            <option value="llm"{{LLM_SELECTED}}>language model + validator</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" id="analyse">Analyse</button>
+        <span class="hint" id="status">Paste text, then press Analyse.</span>
+      </div>
+      <div class="samples">
+        Try a sample:
+        <a href="/?demo=1">Devpost announcement</a> &middot;
+        <a href="/?demo=7">Chinese-dated rules</a> &middot;
+        <a href="/?demo=8">A page with gaps</a> &middot;
+        <a href="/?demo=6">A fabricated amount</a>
+      </div>
+    </section>
+
+    <div id="result">{{RESULT}}</div>
+  </section>
+
+  <aside class="col-side">
+    <section class="card" id="history">
+      <h2>2. History <span class="badge">{{HISTORY_COUNT}}</span></h2>
+      {{HISTORY}}
+      <p class="card-note">Every analysis is stored in a local sqlite3 file
+      (<code>deadline_radar.db</code>). Nothing leaves the machine.</p>
+    </section>
+    <section class="card" id="about">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><b>Read.</b> An offline rules reader, or a language model, proposes values with a
+        quote from the page.</li>
+        <li><b>Validate.</b> Deterministic code re-parses every date, checks every number
+        against the page, and drops anything it cannot find.</li>
+        <li><b>Report.</b> What survived becomes the brief and the <code>.ics</code>
+        calendar; what did not is listed with the reason.</li>
+      </ol>
+      <p class="card-note">Missing fields are reported as
+      &ldquo;{{MISSING_TEXT}}&rdquo; rather than guessed.</p>
+    </section>
+  </aside>
+</main>
+
+<footer class="footer">
+  <span>Deadline Radar &middot; Python standard library only</span>
+  <span>{{SOURCE_NOTE}}</span>
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>
