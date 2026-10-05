@@ -5,6 +5,8 @@
     python3 app.py --offline          never touch the network (demo and testing)
     python3 app.py --analyse page.txt print the validated brief as JSON
     python3 app.py --plan             print the demo scenario as JSON
+    python3 app.py --analyse page.txt --export out.html
+                                      also write the brief as one standalone HTML file
 
 Standard library only. Python 3.9+.
 """
@@ -18,7 +20,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from radar import demo, extract, ics, web                     # noqa: E402
+from radar import demo, export, extract, ics, web             # noqa: E402
 from radar.pipeline import Pipeline                           # noqa: E402
 from radar.store import DEFAULT_DB, Store                     # noqa: E402
 
@@ -41,6 +43,8 @@ def build_parser():
                         help="run a tour step and print the brief as JSON")
     parser.add_argument("--plan", action="store_true", help="print the demo scenario as JSON")
     parser.add_argument("--ics", metavar="FILE", help="also write the calendar to this file")
+    parser.add_argument("--export", metavar="FILE",
+                        help="also write the brief as one standalone HTML file")
     parser.add_argument("--quiet", action="store_true", help="no request logging")
     return parser
 
@@ -81,6 +85,11 @@ def _analyse_once(args, pipeline, store):
         with open(args.ics, "w", encoding="utf-8", newline="") as fh:
             fh.write(ics.build(result))
         sys.stderr.write("wrote %s\n" % args.ics)
+    if args.export:
+        record = store.get(analysis_id)
+        with open(args.export, "w", encoding="utf-8") as fh:
+            fh.write(export.brief_html(record))
+        sys.stderr.write("wrote %s\n" % args.export)
     return 0
 
 
