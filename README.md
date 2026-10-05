@@ -1,8 +1,8 @@
 # Deadline Radar
 
 **Paste an announcement. Get a brief where every value is either backed by a quote
-from the page, or says "page does not state" — plus an `.ics` calendar that
-contains nothing else.**
+ from the page, or says "page does not state" — plus an `.ics` calendar and a
+ self-contained HTML brief that contain nothing else.**
 
 ![Deadline Radar showing a validated brief with evidence and verdicts per field]
 (docs/media/thumbnail.jpg)
@@ -20,9 +20,12 @@ thrown out in public.
 * **Gaps stay gaps.** A field the page does not state becomes the literal string
   `page does not state`.
 * **The audit is visible.** The raw proposal sits next to the validated brief, and
-  rejected fields are listed with the reason.
+   rejected fields are listed with the reason.
+* **Evidence you can keep.** One click (or `--export`) writes the whole brief —
+   values, verdicts, quotes, offsets and the audit — as a single HTML file with no
+   external reference, so it still reads with the app closed.
 * **Zero dependencies.** Python standard library only, no account, no token, no
-  install step.
+   install step.
 
 ```
 Build With AI: Basics                        17 values accepted, 0 rejected
@@ -49,8 +52,9 @@ python3 app.py                      # both readers offered in the UI
 python3 app.py --port 9000          # different port
 python3 app.py --db /tmp/x.db       # where the history lives (default ./deadline_radar.db)
 python3 app.py --analyse page.txt   # print the validated brief as JSON
-python3 app.py --analyse page.txt --ics out.ics
-python3 app.py --plan               # print the demo scenario as JSON
+ python3 app.py --analyse page.txt --ics out.ics      # the calendar
+ python3 app.py --analyse page.txt --export out.html  # the self-contained brief
+ python3 app.py --plan               # print the demo scenario as JSON
 ```
 
 ## Test it
@@ -59,11 +63,12 @@ python3 app.py --plan               # print the demo scenario as JSON
 python3 -m unittest discover -s tests
 ```
 
-85 unit tests, all offline: date normalisation (including `10月26日 5:00pm ET`
-with no year and US daylight-saving boundaries), prize parsing, the
-"page does not state" fallback, rejection of values that are not in the source,
-`.ics` generation, sqlite history, and the HTTP endpoints. No test needs a
-network connection or an API key.
+ 96 unit tests, all offline: date normalisation (including `10月26日 5:00pm ET`
+ with no year and US daylight-saving boundaries), prize parsing, the
+ "page does not state" fallback, rejection of values that are not in the source,
+ `.ics` generation, the self-contained HTML export, sqlite history, and the HTTP
+ endpoints (including the two download routes and their 404s). No test needs a
+ network connection or an API key.
 
 ## Two readers, one validator
 
@@ -75,15 +80,16 @@ network connection or an API key.
 Both emit the same JSON, so the pipeline does not care which one ran:
 
 ```
-text ──▶ reader (offline | llm) ──▶ proposal ──▶ validator ──▶ brief + .ics + audit
-                                                    │
-                                        dates.py · money.py · the pasted page
+ text ──▶ reader (offline | llm) ──▶ proposal ──▶ validator ──▶ brief + .ics + .html + audit
+                                                     │
+                                         dates.py · money.py · the pasted page
 ```
 
 The validator is the product. It checks that each quote exists in the page, that
 every number is on the page, re-parses every date, reads prize amounts out of the
 quoted text, and labels each field `accepted`, `corrected`, `rejected` or
-`missing`. See `spec.md` for the exact rules.
+ `missing`. See `devpost/spec.md > Validation rules` for the exact rules (the earlier
+ root-level `spec.md` is the first pass's more mechanical notes).
 
 ### The language-model reader (optional)
 
@@ -115,23 +121,43 @@ headless Chrome, writes the narration with `edge-tts` and assembles the video wi
 `ffmpeg`. Because every state is a URL, the recording is reproducible and the
 frames are the real interface.
 
+## Planning documents
+ 
+ This project was planned and built with the **Devpost Learn Skill Pack**
+ (`npx skills add challengepost/learn-ai-basics --all -y`, installed into this
+ repository — see `skills-lock.json` and `.agents/skills/`). Its workspace is
+ `devpost/`:
+ 
+* `devpost/scope.md` — the idea, the kernel, who it is for, what is cut
+* `devpost/prd.md` — the core journey, screens, behaviour and states
+* `devpost/spec.md` — the technical blueprint and the exact validation rules
+* `devpost/checklist.md` — the build slices, each with its verification and commit
+* `devpost/app-map.html` — a take-home map of the finished code
+ 
+ The root-level `scope.md` / `prd.md` / `spec.md` are the first pass's notes from
+ the same submission period; where they disagree with `devpost/`, the pack
+ documents win.
+ 
 ## Layout
-
+ 
 ```
-app.py                 CLI and server entry point
-radar/dates.py         date, time and time-zone normalisation (deterministic)
-radar/money.py         prize amount parsing (deterministic)
-radar/offline.py       the offline reader
-radar/extract.py       .env loading and the OpenAI-compatible client
-radar/validate.py      the validator and the audit trail
-radar/ics.py           RFC 5545 calendar output
-radar/store.py         sqlite3 history
-radar/render.py        all HTML rendering (server side)
-radar/web.py           the HTTP surface
-radar/demo.py          the guided-tour scenario used by the video
-templates/, static/    the page, its CSS and its single script
-samples/               three real-shaped pages used in the tests and the demo
-scope.md prd.md spec.md  the planning documents this was built from
+ app.py                 CLI and server entry point
+ radar/dates.py         date, time and time-zone normalisation (deterministic)
+ radar/money.py         prize amount parsing (deterministic)
+ radar/offline.py       the offline reader
+ radar/extract.py       .env loading and the OpenAI-compatible client
+ radar/validate.py      the validator and the audit trail
+ radar/ics.py           RFC 5545 calendar output
+ radar/export.py        the self-contained HTML brief
+ radar/store.py         sqlite3 history
+ radar/render.py        all HTML rendering (server side)
+ radar/web.py           the HTTP surface
+ radar/demo.py          the guided-tour scenario used by the video
+ tools/make_video.py    reproducible demo recording (Chrome + ffmpeg + edge-tts)
+ devpost/               the Devpost Learn Skill Pack workspace (planning docs above)
+ templates/, static/    the page, its CSS and its single script
+ samples/               three real-shaped pages used in the tests and the demo
+ tests/                 96 offline unit tests (unittest)
 ```
 
 ## Why paste text instead of a URL?

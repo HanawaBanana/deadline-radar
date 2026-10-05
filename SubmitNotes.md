@@ -19,7 +19,7 @@ Everything the Devpost form asks for, in one place, with the exact text to paste
   CSS and one small JavaScript file; history is stored in sqlite3 from the
   standard library.)
 
-## Submission text for the Devpost form (226 words)
+## Submission text for the Devpost form (ready to paste, ~245 words)
 
 > Deadline Radar turns a messy announcement into a brief you can act on, and it
 > never asks you to trust a summary.
@@ -39,21 +39,24 @@ Everything the Devpost form asks for, in one place, with the exact text to paste
 >
 > The result is a brief where each field carries its evidence, its character
 > offsets and a verdict, with the raw machine proposal shown next to the validated
-> one. Validated dates become an `.ics` calendar with reminders, and every
-> analysis is kept in a local sqlite3 history.
+> one. Validated dates become an `.ics` calendar with reminders, the whole brief
+> downloads as a single self-contained HTML file that still shows every quote with
+> the app closed, and every analysis is kept in a local sqlite3 history.
 >
 > Python standard library only: run it with `python3 app.py --offline`. No
-> accounts, no API keys, no dependencies, 85 offline unit tests.
+> accounts, no API keys, no dependencies, 96 offline unit tests.
 
 ## Links and files
 
 * **Public repository:** https://github.com/HanawaBanana/deadline-radar
-* **Demo video (local file, to be uploaded to YouTube by the main session):**
-  `docs/media/deadline_radar_demo.mp4` — 130 s, 1280×800, 30 fps, H.264 + AAC,
-  3.55 MB. The same file is committed in the repository under `docs/media/`.
+* **Demo video (public):** https://youtu.be/DX7l92AQ6pQ — 130 s, 1280×800, 30 fps,
+  H.264 + AAC, 3.55 MB. Recorded 2026-10-03 from the guided-tour URLs; the same file
+  is committed in the repository at `docs/media/deadline_radar_demo.mp4`.
 * **Thumbnail:** `docs/media/thumbnail.jpg`
-* **Planning documents (required by the track, all at the repository root):**
-  `scope.md`, `prd.md`, `spec.md`
+* **Planning documents (the Devpost Learn Skill Pack workspace):**
+  `devpost/scope.md`, `devpost/prd.md`, `devpost/spec.md`, `devpost/checklist.md`,
+  `devpost/app-map.html`. The root-level `scope.md` / `prd.md` / `spec.md` are the
+  first pass's notes from the same submission period.
 
 ## Requirements to run the submitted project
 
@@ -74,23 +77,49 @@ python3 app.py --offline
 ```
 
 ```bash
-python3 -m unittest discover -s tests     # 85 tests, all offline
+python3 -m unittest discover -s tests     # 96 tests, all offline
 python3 tools/make_video.py               # optional: rebuild docs/media/deadline_radar_demo.mp4
 ```
 
 ## How the submission meets the track rules
 
-* New project, started from an empty folder during the submission window.
-* Built following the planning workflow: `scope.md` (problem, users, scope,
-  non-goals) → `prd.md` (numbered, testable requirements) → `spec.md` (exact
-  behaviour, API surface, acceptance checks) → implementation → tests.
-* No third-party paid API and no new account: the offline reader is the default,
-  and the optional model reader reuses an endpoint already configured on the
-  machine through an environment variable.
-* The repository contains the three planning documents at its root, an MIT
-  licence, and a README with the run and test commands.
+* **New project**: created during the submission window (first commit 2026-10-03,
+  emptied-folder start; window runs 2026-09-22 → 2026-10-26).
+* **Built with the Devpost Learn Skill Pack**, installed into this repository with
+  the command the rules give (`npx skills add challengepost/learn-ai-basics --all -y`
+  — recorded in `skills-lock.json`, skills under `.agents/skills/`). The skills ran
+  in this coding agent, in sequence: `1-start` (learner profile) → `2-scope`
+  (`devpost/scope.md`) → `3-prd` (`devpost/prd.md`) → `4-spec`
+  (`devpost/spec.md`, including the exact validation rules) → `5-build`
+  (`devpost/checklist.md`: eight slices, each verified and committed; this pass added
+  the self-contained HTML brief and its route) → `6-ship` (this sheet).
+  `devpost/app-map.html` is the take-home map of the finished code.
+* **Planning documents in the repository**: `scope.md`, `prd.md` and `spec.md` as
+  the skills generated them, under `devpost/`.
+* MIT licence detectable in the About section; README carries the run and test
+  commands.
+* No third-party paid API and no new account: the offline reader is the default, and
+  the optional model reader reuses an endpoint already configured on the machine
+  through an environment variable.
+
+### Draft answers for the form's two new required questions (2026-10-05)
+
+* **"A short explanation of how you used the Devpost Learn Skill Pack":**
+  *"I ran the pack's skills in my coding agent against this repository and let them
+  drive the build. `2-scope` and `3-prd` turned the idea into `devpost/scope.md` and
+  `devpost/prd.md`; `4-spec` produced `devpost/spec.md` with the exact validation
+  rules and the file structure; `5-build` turned those into `devpost/checklist.md` —
+  eight slices built, verified and committed one at a time, including the
+  self-contained HTML brief added in this pass. Everything the skills produced is
+  still in `devpost/`, and `devpost/app-map.html` maps one action from the paste box
+  down to the validator."*
+* **Age of majority:** checked — an adult individual entering solo.
 
 ## What the demo video shows (1–3 minute requirement, 130 s)
+Recorded 2026-10-03 from the same guided-tour URLs: it shows the kernel end to end
+but predates the `.html` export link added on 2026-10-05 (that export is covered by
+the README and the test suite rather than by a frame in the video).
+
 
 | Time | Step | What is on screen |
 |---|---|---|
