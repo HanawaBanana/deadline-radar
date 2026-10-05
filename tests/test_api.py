@@ -133,6 +133,32 @@ class TestHttp(unittest.TestCase):
         self.assertTrue(body.startswith("BEGIN:VCALENDAR"))
         self.assertIn("DTSTART", body)
 
+    def test_html_brief_download_has_the_right_type_and_filename(self):
+        status, data = self.post("/api/analyse", {"text": THIN, "mode": "offline"})
+        req = urllib.request.Request(self.base + "/api/analysis/%s.html" % data["id"])
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = resp.read().decode("utf-8")
+            self.assertEqual(resp.status, 200)
+            self.assertIn("text/html", resp.headers["Content-Type"])
+            self.assertIn("attachment", resp.headers["Content-Disposition"])
+            self.assertIn("deadline-radar-brief-%s.html" % data["id"],
+                          resp.headers["Content-Disposition"])
+        self.assertIn("page does not state", body)
+        self.assertIn("Submissions close November 14, 2026 at 11:59pm PT.", body)
+        self.assertNotIn('<link rel="stylesheet"', body)
+
+    def test_the_result_card_links_to_the_html_brief(self):
+        status, data = self.post("/api/analyse", {"text": THIN, "mode": "offline"})
+        self.assertIn("/api/analysis/%s.html" % data["id"], data["html"])
+        self.assertIn("Download brief (.html)", data["html"])
+
+    def test_an_unknown_html_brief_is_404(self):
+        try:
+            status, _, _ = self.get("/api/analysis/no-such-id.html")
+        except urllib.error.HTTPError as exc:
+            status = exc.code
+        self.assertEqual(status, 404)
+
     def test_history_endpoint_returns_rows_and_html(self):
         self.post("/api/analyse", {"text": THIN, "mode": "offline"})
         status, body, _ = self.get("/api/history")

@@ -218,6 +218,9 @@ def result_html(result, source, analysis_id=None, ics_url=None):
     """The whole brief: fields, dates, prizes, source, audit trail, calendar."""
     counts = result.get("counts") or {}
     ics_url = ics_url or ("/api/analysis/%s.ics" % analysis_id if analysis_id else "#")
+    brief_url = ("/api/analysis/%s.html" % analysis_id) if analysis_id else ""
+    brief_link = ('<a class="btn" id="brief-link" href="%s">Download brief (.html)</a>'
+                  % esc(brief_url)) if brief_url else ""
     return """
 <div class="result">
   <section class="card" id="brief-head">
@@ -229,6 +232,7 @@ def result_html(result, source, analysis_id=None, ics_url=None):
       <div class="head-actions">
         <span class="pill pill-%(mode)s">%(mode)s reader</span>
         <a class="btn btn-primary" id="ics-link" href="%(ics_url)s">Download .ics</a>
+        %(brief_link)s
       </div>
     </div>
     <div class="counters">
@@ -310,6 +314,7 @@ def result_html(result, source, analysis_id=None, ics_url=None):
         "missing": counts.get("missing", 0),
         "events": len(result.get("events") or []),
         "ics_url": esc(ics_url),
+        "brief_link": brief_link,
         "fields": field_rows(result),
         "dates": date_rows(result),
         "prizes": prize_rows(result),

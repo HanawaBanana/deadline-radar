@@ -6,6 +6,7 @@ Routes
     GET  /ics/<id>                the .ics text as a page (so it can be shown)
     GET  /api/analysis/<id>       the analysis as JSON
     GET  /api/analysis/<id>.ics   the calendar file (attachment)
+    GET  /api/analysis/<id>.html  the brief as one standalone HTML file (attachment)
     GET  /api/history             JSON + rendered HTML for the history list
     GET  /api/demo                the guided tour as JSON (a tiny demo driver)
     POST /api/analyse             {"text": ..., "mode": "offline"|"llm"}
@@ -25,6 +26,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from . import demo as demo_mod
+from . import export as export_mod
 from . import ics as ics_mod
 from . import render
 from .store import Store
@@ -201,6 +203,14 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_text(ics_mod.build(found["result"]),
                                           content_type="text/calendar; charset=utf-8",
                                           filename=ics_mod.filename(found["result"]))
+                if tail.endswith(".html"):
+                    found = self._analysis_or_404(tail[:-5])
+                    if not found:
+                        return
+                    name = "deadline-radar-brief-%s.html" % found["id"]
+                    return self.send_text(export_mod.brief_html(found),
+                                          content_type="text/html; charset=utf-8",
+                                          filename=name)
                 found = self._analysis_or_404(tail)
                 if not found:
                     return
