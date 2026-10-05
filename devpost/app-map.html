@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Radar — app map</title>
+<style>
+  :root{--ink:#1d1c1a;--paper:#f7f5f1;--line:#d9d4cb;--accent:#7a5c3e;
+        --accepted:#2f6b46;--corrected:#8a5a12;--rejected:#8c2f2f;--missing:#6b6b6b;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:900px;margin:0 auto;padding:40px 24px 72px}
+  h1{font-size:1.7rem;margin:0 0 4px}
+  h2{font-size:1.05rem;letter-spacing:.02em;text-transform:uppercase;color:var(--accent);
+     margin:36px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  p,li{max-width:70ch}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+           background:#fff;border:1px solid var(--line);border-radius:3px;padding:1px 4px}
+  .pill{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;
+        border-radius:10px;padding:1px 8px;color:#fff}
+  .a{background:var(--accepted)}.c{background:var(--corrected)}.r{background:var(--rejected)}.m{background:var(--missing)}
+  .lede{color:#4b4741;margin-top:0}
+  ol.route{padding-left:20px}
+  ol.route li{margin-bottom:14px}
+  .where{display:block;color:#4b4741;font-size:.9rem}
+  details{background:#fff;border:1px solid var(--line);border-radius:5px;padding:10px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600}
+  table{border-collapse:collapse;width:100%;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;font-size:.94rem}
+  th{background:#efeae1;font-weight:600}
+  footer{margin-top:36px;color:#4b4741;font-size:.88rem;border-top:1px solid var(--line);padding-top:12px}
+  svg{max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:5px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Deadline Radar — app map</h1>
+  <p class="lede">A take-home map of the code: one real action, the pieces it touches, and
+  the places to start when you want to change something. Generated from the working tree at
+  commit <code>b4c38f9</code> plus the planning documents in <code>devpost/</code>.
+  It is a snapshot and can drift.</p>
+
+  <h2>What the app is</h2>
+  <p>One local page. You paste the text of an announcement; a reader proposes values with
+  quotes; deterministic Python decides which of them are true and shows its work; the result
+  is a brief, two exports (a calendar and a self-contained HTML file) and a local history.
+  Three pieces, deliberately different kinds of thing: <strong>reader</strong> (may
+  hallucinate) → <strong>validator</strong> (cannot) → <strong>brief</strong> (shows
+  both).</p>
+
+  <h2>One action, end to end</h2>
+  <svg viewBox="0 0 860 210" role="img" aria-label="Paste text becomes a proposal, the validator decides, and the brief plus exports and history come out">
+    <defs>
+      <marker id="ar" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+        <path d="M0,0 L10,4 L0,8 z" fill="#7a5c3e"/>
+      </marker>
+    </defs>
+    <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#1d1c1a">
+      <rect x="10" y="60" width="150" height="70" rx="6" fill="#fdfcf9" stroke="#d9d4cb"/>
+      <text x="22" y="86">1. paste + Analyse</text>
+      <text x="22" y="104" fill="#4b4741">templates/index.html</text>
+      <text x="22" y="120" fill="#4b4741">static/app.js → POST</text>
+
+      <rect x="200" y="26" width="190" height="66" rx="6" fill="#fdfcf9" stroke="#d9d4cb"/>
+      <text x="212" y="50">2a. reader (proposal)</text>
+      <text x="212" y="68" fill="#4b4741">radar/offline.py extract()</text>
+      <text x="212" y="84" fill="#4b4741">radar/extract.py (model)</text>
+
+      <rect x="200" y="110" width="190" height="80" rx="6" fill="#fdfcf9" stroke="#7a5c3e" stroke-width="1.5"/>
+      <text x="212" y="134">2b. validator (decides)</text>
+      <text x="212" y="152" fill="#4b4741">radar/validate.py analyse()</text>
+      <text x="212" y="168" fill="#4b4741">dates.py · money.py</text>
+      <text x="212" y="184" fill="#4b4741">quote lookup · numbers</text>
+
+      <rect x="430" y="60" width="180" height="70" rx="6" fill="#fdfcf9" stroke="#d9d4cb"/>
+      <text x="442" y="84">3. brief (visible)</text>
+      <text x="442" y="102" fill="#4b4741">radar/render.py</text>
+      <text x="442" y="118" fill="#4b4741">field_rows()</text>
+
+      <rect x="650" y="18" width="200" height="58" rx="6" fill="#fdfcf9" stroke="#d9d4cb"/>
+      <text x="662" y="40">4a. history (sqlite)</text>
+      <text x="662" y="58" fill="#4b4741">radar/store.py Store.save()</text>
+
+      <rect x="650" y="92" width="200" height="58" rx="6" fill="#fdfcf9" stroke="#d9d4cb"/>
+      <text x="662" y="114">4b. exports</text>
+      <text x="662" y="132" fill="#4b4741">ics.py · export.py</text>
+
+      <line x1="162" y1="95" x2="196" y2="62" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <line x1="162" y1="95" x2="196" y2="146" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <line x1="392" y1="74" x2="426" y2="84" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <line x1="392" y1="140" x2="426" y2="114" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <line x1="612" y1="86" x2="646" y2="52" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <line x1="612" y1="102" x2="646" y2="118" stroke="#7a5c3e" marker-end="url(#ar)"/>
+      <text x="10" y="24" font-size="11" fill="#4b4741">A reader may be wrong. Only the validator's output is shown as true — every value carries its quote, or says “page does not state”.</text>
+    </g>
+  </svg>
+
+  <h2>A 3-stop route (reference)</h2>
+  <p class="stop-note" style="color:#4b4741;font-size:.9rem;margin-top:-4px">
+  Reference route prepared from the finished code; it was not toured interactively, so treat it as
+  directions rather than a completed walkthrough.</p>
+  <ol class="route">
+    <li>
+      <strong>The paste and the request</strong> — <code>templates/index.html</code> (the form
+      and the download row) → <code>static/app.js</code> (posts
+      <code>{"text": …, "mode": …}</code> to <code>/api/analyse</code> and swaps in the returned
+      fragment).
+      <span class="where">What to look for: the brief is not built in the browser — the server
+      returns finished markup, so a screenshot and a user see the same thing.</span>
+    </li>
+    <li>
+      <strong>Where “true” is decided</strong> — <code>radar/web.py</code>
+      (<code>Handler.do_POST</code> → <code>radar/pipeline.py</code>) →
+      <code>radar/validate.py :: analyse()</code> (line ~372), which calls
+      <code>validate_date_field()</code>, <code>validate_prize_field()</code> and
+      <code>validate_text_field()</code>; dates go to <code>radar/dates.py</code>, money to
+      <code>radar/money.py</code>.
+      <span class="where">What to look for: the quote is looked up in the pasted text
+      (<code>Page</code>), and a number that is not on the page produces verdict
+      <span class="pill r">rejected</span> with a reason — never a silent fix.</span>
+    </li>
+    <li>
+      <strong>What comes out</strong> — <code>radar/render.py</code>
+      (<code>field_rows()</code>, <code>rejected_table()</code>, <code>source_html()</code>),
+      then the two exports: <code>radar/ics.py :: build()</code> and
+      <code>radar/export.py :: brief_html()</code>, offered by the routes in
+      <code>radar/web.py</code> and stored by <code>radar/store.py :: Store.save()</code>.
+      <span class="where">What to look for: the calendar writes only dates that survived the
+      validator, and the exported HTML has no external reference at all.</span>
+    </li>
+  </ol>
+
+  <h2>To change this, start here</h2>
+  <table>
+    <tr><th>You want to change…</th><th>Start at</th></tr>
+    <tr><td>what the offline reader looks for (a new field, another date format)</td>
+        <td><code>radar/offline.py :: extract()</code>, then teach <code>radar/validate.py</code> how to judge the new field</td></tr>
+    <tr><td>a verdict rule (when something is rejected or corrected)</td>
+        <td><code>radar/validate.py</code> — the per-kind functions; the rules are listed in <code>devpost/spec.md &gt; Validation rules</code></td></tr>
+    <tr><td>how a date or a prize is rendered</td>
+        <td><code>radar/dates.py</code>, <code>radar/money.py</code></td></tr>
+    <tr><td>the look of the brief</td>
+        <td><code>static/style.css</code> for the app, <code>radar/export.py</code> for the exported file (it carries its own inline styles)</td></tr>
+    <tr><td>what the model reader is asked for</td>
+        <td><code>radar/extract.py</code> (the prompt and the one HTTP call)</td></tr>
+    <tr><td>how the demo video is produced</td>
+        <td><code>radar/demo.py</code> (one state per URL) and <code>tools/make_video.py</code></td></tr>
+  </table>
+
+  <details>
+    <summary>The tiny edit that was kept</summary>
+    <p>During this build pass the download row gained a second link
+    (<code>Download brief (.html)</code>) in <code>radar/render.py :: result_html()</code>,
+    pointing at <code>/api/analysis/&lt;id&gt;.html</code>. Visible effect: after an analysis, the
+    head of the brief offers both files. The check that it worked:
+    <code>tests/test_api.py</code> asserts the link and the attachment headers, and
+    <code>tests/test_export.py</code> asserts the exported document has no external reference.</p>
+  </details>
+
+  <h2>A practice to reuse</h2>
+  <p>Write the rule as a <em>visible rejection</em>, then put a test on it. In this project the
+  rule “a value containing a number that is not on the page is rejected” lives in
+  <code>devpost/spec.md &gt; Validation rules</code> (rule 3), is implemented in
+  <code>radar/validate.py</code>, and is pinned by <code>tests/test_validate.py</code> and
+  <code>tests/test_money.py</code>; the demo tour step <code>/?demo=6</code> shows the same rule
+  to a human with the fabricated amount beside the rejection.</p>
+  <p>The reusable part is the shape, not the topic: <em>decide the rule → make it observable in
+  the interface → keep one check that fails the moment the rule regresses</em>. It works the same
+  way for a pricing rule, a permission rule or a validation rule in the next project.</p>
+
+  <h2>Running it again</h2>
+  <pre><code>git clone https://github.com/HanawaBanana/deadline-radar
+cd deadline-radar
+python3 app.py --offline          # http://127.0.0.1:8781/
+python3 -m unittest discover -s tests
+python3 app.py --analyse samples/thin_announcement.txt --export brief.html</code></pre>
+
+  <footer>
+    Snapshot of the code at commit <code>b4c38f9</code>; planning documents in
+    <code>devpost/</code>. No scripts, no network, no analytics — this page is a single file and
+    works offline.
+  </footer>
+</main>
+</body>
+</html>

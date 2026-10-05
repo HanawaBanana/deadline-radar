@@ -17,3 +17,10 @@ docs/media/_work/
 
 # macOS
 .DS_Store
+
+# Devpost Learn skill pack: personal learner context stays out of commits.
+/devpost/learner-profile.md
+
+# Local credential variants; .env.example is secret-free and stays tracked.
+.env.*
+!.env.example
